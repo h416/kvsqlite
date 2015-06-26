@@ -15,7 +15,7 @@ kvsqlite::database db("test.sqlite3");
 db.set("hello", "world");
 
 std::string value;
-result = db.get("hello", value);
+db.get("hello", value);
 
 assert(value == "world");
 ```
