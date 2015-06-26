@@ -1,7 +1,7 @@
 # kvsqlite
 kvsqlite is a header-only C++ library designed to make simple key value store using SQLite.
 It was inspired by [YapDatabase](https://github.com/yapstudios/YapDatabase).
-It was build on [dlib](https://github.com/davisking/dlib) and [cereal](https://github.com/USCiLab/cereal).
+It was build on [sqlite](https://sqlite.org), [dlib](https://github.com/davisking/dlib) and [cereal](https://github.com/USCiLab/cereal).
 
 
 # Tutorial
@@ -9,10 +9,14 @@ It was build on [dlib](https://github.com/davisking/dlib) and [cereal](https://g
 ## Quick Start
 ```cpp
 #include <kvsqlite/kvsqlite.h>
+
 kvsqlite::database db("test.sqlite3");
+
 db.set("hello", "world");
+
 std::string value;
 result = db.get("hello", value);
+
 assert(value == "world");
 ```
 
@@ -23,7 +27,7 @@ class Person
 {
 public:
     Person(const std::string& name):_name(name){}
-    std::string name(){return _name;}
+    std::string name() const {return _name;}
 private:
     std::string _name;
     
@@ -37,7 +41,9 @@ private:
 };
 
 Person person("name");
+
 db.set("person1", person);
+
 assert(db.exists("person1")==true);
 ```
 
