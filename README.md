@@ -64,4 +64,7 @@ assert(db.exists("person1")==true);
     transaction.commit();
 }
 ```
+# License
+kvsqlite is licensed under [Boost Software License](http://www.boost.org/LICENSE_1_0.txt).
+
 
