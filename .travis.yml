@@ -5,11 +5,9 @@ compiler:
 - clang
 
 before_install:  
-  # g++
   - if [ "$CXX" == "g++" ]; then 
       sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; 
     fi
-  # clang
   - if [ "$CXX" == "clang++" ]; then 
       #sudo add-apt-repository -y ppa:h-rayflood/llvm; 
       sudo add-apt-repository -y 'deb http://ppa.launchpad.net/ubuntu-toolchain-r/test/ubuntu precise main';
