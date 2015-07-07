@@ -9,6 +9,7 @@
 
 #include <sstream>
 #include <string>
+#include <memory>
 
 #include <dlib/sqlite.h>
 
@@ -71,7 +72,7 @@ inline void from_json(const std::string &str, T& obj)
   archive(obj);
 }
 
-
+    
 // database
 class database : public dlib::database
 {
@@ -79,12 +80,12 @@ class database : public dlib::database
   database(){}
   explicit database(const std::string& file):dlib::database(file)
   {
-    create_table();
+    init();
   }
   void open(const std::string& file)
   {
     dlib::database::open(file);
-    create_table();
+    init();
   }
   bool exists(const std::string& key, const std::string& collection = "")
   {
@@ -101,20 +102,16 @@ class database : public dlib::database
     dlib::int64 rowid = find(key, collection);
 
     if(rowid > 0){
-      dlib::statement st(*this, "UPDATE \"kvsqlite\" SET \"data\" = ?, \"metadata\" = ? WHERE \"rowid\" = ?;");
-      st.bind(1, data);
-      st.bind(2, metadata);
-      st.bind(3, rowid);
-      st.exec();
+      update_statement_->bind(1, data);
+      update_statement_->bind(2, metadata);
+      update_statement_->bind(3, rowid);
+      update_statement_->exec();
     }else{
-      dlib::statement st(*this, "INSERT INTO \"kvsqlite\""
-                 " (\"collection\", \"key\", \"data\", \"metadata\") VALUES (?, ?, ?, ?);");
-
-      st.bind(1, collection);
-      st.bind(2, key);
-      st.bind(3, data);
-      st.bind(4, metadata);
-      st.exec();
+      insert_statement_->bind(1, collection);
+      insert_statement_->bind(2, key);
+      insert_statement_->bind(3, data);
+      insert_statement_->bind(4, metadata);
+      insert_statement_->exec();
     }
   }
   template<class T>
@@ -129,16 +126,15 @@ class database : public dlib::database
   }
   bool get(const std::string& key, std::string& data, const std::string& collection = "", std::string* metadata = nullptr)
   {
-    dlib::statement st(*this, "SELECT \"data\", \"metadata\" FROM \"kvsqlite\" WHERE \"collection\" = ? AND \"key\" = ?;");
-    st.bind(1, collection);
-    st.bind(2, key);
-    st.exec();
+    get_statement_->bind(1, collection);
+    get_statement_->bind(2, key);
+    get_statement_->exec();
 
-    st.move_next();
-    if(1 < st.get_num_columns()){
-      st.get_column(0, data);
+    get_statement_->move_next();
+    if(1 < get_statement_->get_num_columns()){
+      get_statement_->get_column(0, data);
       if(metadata){
-        st.get_column(1, *metadata);
+        get_statement_->get_column(1, *metadata);
       }
       return true;
     }else{
@@ -151,10 +147,9 @@ class database : public dlib::database
   }
   void remove(const std::string& key, const std::string& collection = "")
   {
-    dlib::statement st(*this, "DELETE FROM \"kvsqlite\" WHERE \"collection\" = ? AND \"key\" = ?;");
-    st.bind(1, collection);
-    st.bind(2, key);
-    st.exec();
+    remove_statement_->bind(1, collection);
+    remove_statement_->bind(2, key);
+    remove_statement_->exec();
   }
   void removeAllObjectsInCollection(const std::string& collection)
   {
@@ -185,6 +180,30 @@ class database : public dlib::database
   }
 
  private:
+  std::unique_ptr<dlib::statement> find_statement_;
+  std::unique_ptr<dlib::statement> get_statement_;
+  std::unique_ptr<dlib::statement> update_statement_;
+  std::unique_ptr<dlib::statement> insert_statement_;
+  std::unique_ptr<dlib::statement> remove_statement_;
+    
+  void init()
+  {
+      create_table();
+      init_statements();
+  }
+  void init_statements()
+  {
+      find_statement_.reset (new dlib::statement(*this, "SELECT \"rowid\" FROM \"kvsqlite\" WHERE \"collection\" = ? AND \"key\" = ?;") );
+      
+      get_statement_.reset (new dlib::statement(*this, "SELECT \"data\", \"metadata\" FROM \"kvsqlite\" WHERE \"collection\" = ? AND \"key\" = ?;"));
+      
+      update_statement_.reset (new dlib::statement(*this, "UPDATE \"kvsqlite\" SET \"data\" = ?, \"metadata\" = ? WHERE \"rowid\" = ?;"));
+      
+      insert_statement_.reset (new dlib::statement(*this, "INSERT INTO \"kvsqlite\""
+                         " (\"collection\", \"key\", \"data\", \"metadata\") VALUES (?, ?, ?, ?);"));
+      
+      remove_statement_.reset (new dlib::statement(*this, "DELETE FROM \"kvsqlite\" WHERE \"collection\" = ? AND \"key\" = ?;"));
+  }
   bool table_exists(const std::string& tablename)
   {
     return dlib::query_int(*this, "select count(*) from sqlite_master where name = \""+tablename+"\"") == 1;
@@ -192,16 +211,15 @@ class database : public dlib::database
 
   dlib::int64 find(const std::string& key, const std::string& collection = "")
   {
-    dlib::statement st(*this, "SELECT \"rowid\" FROM \"kvsqlite\" WHERE \"collection\" = ? AND \"key\" = ?;");
-    st.bind(1, collection);
-    st.bind(2, key);
-    st.exec();
+    find_statement_->bind(1, collection);
+    find_statement_->bind(2, key);
+    find_statement_->exec();
 
-    st.move_next();
+    find_statement_->move_next();
     dlib::int64 rowid = 0;
-    if(0 < st.get_num_columns())
+    if(0 < find_statement_->get_num_columns())
     {
-      rowid = st.get_column_as_int64(0);
+      rowid = find_statement_->get_column_as_int64(0);
     }
     return rowid;
   }
