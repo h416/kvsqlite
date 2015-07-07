@@ -72,7 +72,7 @@ inline void from_json(const std::string &str, T& obj)
   archive(obj);
 }
 
-    
+
 // database
 class database : public dlib::database
 {
@@ -185,7 +185,7 @@ class database : public dlib::database
   std::unique_ptr<dlib::statement> update_statement_;
   std::unique_ptr<dlib::statement> insert_statement_;
   std::unique_ptr<dlib::statement> remove_statement_;
-    
+
   void init()
   {
       create_table();
@@ -194,14 +194,14 @@ class database : public dlib::database
   void init_statements()
   {
       find_statement_.reset (new dlib::statement(*this, "SELECT \"rowid\" FROM \"kvsqlite\" WHERE \"collection\" = ? AND \"key\" = ?;") );
-      
+
       get_statement_.reset (new dlib::statement(*this, "SELECT \"data\", \"metadata\" FROM \"kvsqlite\" WHERE \"collection\" = ? AND \"key\" = ?;"));
-      
+
       update_statement_.reset (new dlib::statement(*this, "UPDATE \"kvsqlite\" SET \"data\" = ?, \"metadata\" = ? WHERE \"rowid\" = ?;"));
-      
+
       insert_statement_.reset (new dlib::statement(*this, "INSERT INTO \"kvsqlite\""
                          " (\"collection\", \"key\", \"data\", \"metadata\") VALUES (?, ?, ?, ?);"));
-      
+
       remove_statement_.reset (new dlib::statement(*this, "DELETE FROM \"kvsqlite\" WHERE \"collection\" = ? AND \"key\" = ?;"));
   }
   bool table_exists(const std::string& tablename)
