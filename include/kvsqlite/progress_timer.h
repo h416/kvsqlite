@@ -7,6 +7,7 @@
 #define INCLUDE_KVSQLITE_PROGRESS_TIMER_H_
 
 #include <iostream>
+#include <chrono>
 
 namespace kvsqlite {
 
@@ -16,8 +17,8 @@ class progress_timer
  public:
   progress_timer():start_(std::chrono::system_clock::now()){}
   ~progress_timer(){
-    std::chrono::microseconds sec = std::chrono::system_clock::now() - start_;
-    std::cout << sec.count() << "us" << std::endl;
+    std::chrono::system_clock::time_point end = std::chrono::system_clock::now();
+    std::cout << std::chrono::duration_cast<std::chrono::microseconds>(end - start_).count() << "us" << std::endl;
   }
  private:
   std::chrono::system_clock::time_point start_;
