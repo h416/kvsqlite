@@ -10,9 +10,9 @@ if [ ! -d dlib-18.16 ]; then
     tar xf dlib-18.16.tar.gz
 fi
 
-if [ ! -d sqlite-amalgamation-3081002 ]; then  
-    curl -O https://sqlite.org/2015/sqlite-amalgamation-3081002.zip
-    unzip sqlite-amalgamation-3081002.zip
+if [ ! -d sqlite-amalgamation-3081100 ]; then  
+    curl -O https://sqlite.org/2015/sqlite-amalgamation-3081100.zip
+    unzip sqlite-amalgamation-3081100.zip
 fi
 
 CC=${CC:-clang}
