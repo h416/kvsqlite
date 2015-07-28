@@ -24,7 +24,8 @@ echo $CXX
 echo "Environment: `uname -a`"
 echo "Compiler: `$CXX --version`"
 
-$CC -c -O2 -I sqlite-amalgamation-3081002 -DSQLITE_THREADSAFE=0 -DSQLITE_OMIT_LOAD_EXTENSION -o sqlite.o sqlite-amalgamation-3081002/sqlite3.c
+
+$CC -c -O2 -I sqlite-amalgamation-3081002 -DSQLITE_THREADSAFE=0 -DSQLITE_OMIT_LOAD_EXTENSION -o sqlite.o sqlite-amalgamation-3081100/sqlite3.c
 $CXX -c -O2 -std=c++11 -I include -I cereal-1.1.2/include -I dlib-18.16 -I sqlite-amalgamation-3081002 -o test.o test.cpp
 $CXX -o test test.o sqlite.o
 
