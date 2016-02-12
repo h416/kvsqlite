@@ -1,7 +1,5 @@
 # kvsqlite
 
-![Logo](kvsqlite.png)
-
 [![Build Status](https://travis-ci.org/h416/kvsqlite.svg?branch=master)](https://travis-ci.org/h416/kvsqlite)
 
 kvsqlite is a header-only C++ library designed to make simple key value store using SQLite.
