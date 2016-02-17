@@ -323,7 +323,7 @@ class database : public dlib::database
     }
   }
 
-  int64 count(dlib::statement *st)
+  int64 count(dlib::statement *st) const
   {
     st->exec();
     st->move_next();
@@ -334,7 +334,7 @@ class database : public dlib::database
     }
     return result;
   }
-  std::vector<std::string> get_vector(dlib::statement *st)
+  std::vector<std::string> get_vector(dlib::statement *st) const
   {
     std::vector<std::string> result;
     st->exec();
