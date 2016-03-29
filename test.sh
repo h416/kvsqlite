@@ -10,9 +10,9 @@ if [ ! -d dlib-18.18 ]; then
     tar xf dlib-18.18.tar.gz
 fi
 
-if [ ! -d sqlite-amalgamation-3110100 ]; then  
-    curl -O https://sqlite.org/2016/sqlite-amalgamation-3110100.zip
-    unzip sqlite-amalgamation-3110100.zip
+if [ ! -d sqlite-amalgamation-3120000 ]; then  
+    curl -O https://sqlite.org/2016/sqlite-amalgamation-3120000.zip
+    unzip sqlite-amalgamation-3120000.zip
 fi
 
 CC=${CC:-clang}
@@ -25,7 +25,7 @@ echo "Environment: `uname -a`"
 echo "Compiler: `$CXX --version`"
 
 
-$CC -c -O2 -I sqlite-amalgamation-3100200 -DSQLITE_THREADSAFE=0 -DSQLITE_OMIT_LOAD_EXTENSION -o sqlite.o sqlite-amalgamation-3110100/sqlite3.c
+$CC -c -O2 -I sqlite-amalgamation-3120000 -DSQLITE_THREADSAFE=0 -DSQLITE_OMIT_LOAD_EXTENSION -o sqlite.o sqlite-amalgamation-3120000/sqlite3.c
 $CXX -c -O2 -std=c++11 -I include -I cereal-1.1.2/include -I dlib-18.18 -I sqlite-amalgamation-3110100 -o test.o test.cpp
 $CXX -o test test.o sqlite.o
 
