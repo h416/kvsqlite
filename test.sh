@@ -1,18 +1,23 @@
 #!/bin/bash
 
-if [ ! -d cereal-1.1.2 ]; then
-    curl -o cereal-1.1.2.tar.gz -L https://github.com/USCiLab/cereal/archive/v1.1.2.tar.gz
-    tar xf cereal-1.1.2.tar.gz
+CEREAL_VER="1.2.0"
+CEREAL="cereal-"$CEREAL_VER
+if [ ! -d $CEREAL ]; then
+    curl -o $CEREAL.tar.gz -L https://github.com/USCiLab/cereal/archive/v$CEREAL_VER.tar.gz
+    tar xf $CEREAL.tar.gz
 fi
 
-if [ ! -d dlib-18.18 ]; then
-    curl -o dlib-18.18.tar.gz -L https://github.com/davisking/dlib/archive/v18.18.tar.gz
-    tar xf dlib-18.18.tar.gz
+DLIB_VER="19.0"
+DLIB="dlib-"$DLIB_VER
+if [ ! -d $DLIB ]; then
+    curl -o $DLIB.tar.gz -L https://github.com/davisking/dlib/archive/v$DLIB_VER.tar.gz
+    tar xf $DLIB.tar.gz
 fi
 
-if [ ! -d sqlite-amalgamation-3120200 ]; then
-    curl -O https://sqlite.org/2016/sqlite-amalgamation-3120200.zip
-    unzip sqlite-amalgamation-3120200.zip
+SQLITE="sqlite-amalgamation-3140000" 
+if [ ! -d $SQLITE ]; then
+    curl -O https://sqlite.org/2016/$SQLITE.zip
+    unzip $SQLITE.zip
 fi
 
 CC=${CC:-clang}
@@ -25,8 +30,8 @@ echo "Environment: `uname -a`"
 echo "Compiler: `$CXX --version`"
 
 
-$CC -c -O2 -I sqlite-amalgamation-3120200 -DSQLITE_THREADSAFE=0 -DSQLITE_OMIT_LOAD_EXTENSION -o sqlite.o sqlite-amalgamation-3120200/sqlite3.c
-$CXX -c -O2 -std=c++11 -I include -I cereal-1.1.2/include -I dlib-18.18 -I sqlite-amalgamation-3120200 -o test.o test.cpp
+$CC -c -O2 -I $SQLITE -DSQLITE_THREADSAFE=0 -DSQLITE_OMIT_LOAD_EXTENSION -o sqlite.o $SQLITE/sqlite3.c
+$CXX -c -O2 -std=c++11 -I include -I $CEREAL/include -I $DLIB -I $SQLITE -o test.o test.cpp
 $CXX -o test test.o sqlite.o
 
 ./test
