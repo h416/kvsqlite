@@ -1,22 +1,22 @@
 #!/bin/bash
 
-CEREAL_VER="1.2.1"
+CEREAL_VER="1.2.2"
 CEREAL="cereal-"$CEREAL_VER
 if [ ! -d $CEREAL ]; then
     curl -o $CEREAL.tar.gz -L https://github.com/USCiLab/cereal/archive/v$CEREAL_VER.tar.gz
     tar xf $CEREAL.tar.gz
 fi
 
-DLIB_VER="19.2"
+DLIB_VER="19.13"
 DLIB="dlib-"$DLIB_VER
 if [ ! -d $DLIB ]; then
     curl -o $DLIB.tar.gz -L https://github.com/davisking/dlib/archive/v$DLIB_VER.tar.gz
     tar xf $DLIB.tar.gz
 fi
 
-SQLITE="sqlite-amalgamation-3150000" 
+SQLITE="sqlite-amalgamation-3240000" 
 if [ ! -d $SQLITE ]; then
-    curl -O https://sqlite.org/2016/$SQLITE.zip
+    curl -O https://www.sqlite.org/2018/$SQLITE.zip
     unzip $SQLITE.zip
 fi
 
