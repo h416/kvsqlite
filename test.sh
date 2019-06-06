@@ -7,16 +7,16 @@ if [ ! -d $CEREAL ]; then
     tar xf $CEREAL.tar.gz
 fi
 
-DLIB_VER="19.13"
+DLIB_VER="19.17"
 DLIB="dlib-"$DLIB_VER
 if [ ! -d $DLIB ]; then
     curl -o $DLIB.tar.gz -L https://github.com/davisking/dlib/archive/v$DLIB_VER.tar.gz
     tar xf $DLIB.tar.gz
 fi
 
-SQLITE="sqlite-amalgamation-3240000" 
+SQLITE="sqlite-amalgamation-3280000" 
 if [ ! -d $SQLITE ]; then
-    curl -O https://www.sqlite.org/2018/$SQLITE.zip
+    curl -O https://www.sqlite.org/2019/$SQLITE.zip
     unzip $SQLITE.zip
 fi
 
